@@ -1,0 +1,213 @@
+{
+  "classification_threshold": null,
+  "config": {
+    "data": {
+      "demo": {
+        "base_failure_rate": 0.5,
+        "freq": "6H",
+        "num_regions": 8,
+        "periods": 240,
+        "random_state": 42,
+        "start_date": "2024-01-01"
+      },
+      "group_column": "region_id",
+      "real": {
+        "cache_dir": "data/raw/real",
+        "end_date": "2024-12-31",
+        "ghcn": {
+          "stations": {
+            "AZ": "USW00023183",
+            "CA": "USW00023234",
+            "CO": "USW00023062",
+            "FL": "USW00012839",
+            "GA": "USW00053863",
+            "IL": "USW00094846",
+            "NC": "USW00013723",
+            "NY": "USW00094728",
+            "TX": "USW00013904",
+            "WA": "USW00024233"
+          }
+        },
+        "start_date": "2021-01-01",
+        "storm_events": {
+          "years": [
+            2021,
+            2022,
+            2023,
+            2024
+          ]
+        }
+      },
+      "timestamp_column": "timestamp"
+    },
+    "experiment": {
+      "mode": "demo",
+      "name": "hybrid_weather_failure"
+    },
+    "features": {
+      "base_weather_cols": null,
+      "exclude_auto": [
+        "longitude",
+        "latitude"
+      ],
+      "include": null,
+      "lags": [
+        1,
+        3,
+        6,
+        12,
+        24
+      ],
+      "rolling_statistics": [
+        "mean",
+        "max",
+        "std"
+      ],
+      "rolling_windows": [
+        3,
+        6,
+        12,
+        24
+      ]
+    },
+    "paths": {
+      "artifacts_dir": "models",
+      "processed_data_dir": "data/processed"
+    },
+    "sequence": {
+      "features": null,
+      "length": 24,
+      "stride": 1
+    },
+    "split": {
+      "test_size": 0.15,
+      "val_size": 0.15
+    },
+    "target": {
+      "classification_threshold_percentile": 0.8,
+      "column": "failures",
+      "type": "regression"
+    },
+    "training": {
+      "device": "auto",
+      "ensemble": {
+        "weight_tabular": 0.5
+      },
+      "lstm": {
+        "batch_size": 64,
+        "dropout": 0.2,
+        "epochs": 25,
+        "grad_clip": 1.0,
+        "hidden_size": 128,
+        "lr": 0.001,
+        "min_delta": 0.0005,
+        "num_layers": 2,
+        "patience": 5,
+        "progress_bar": true
+      },
+      "random_seed": 42,
+      "tabular": {
+        "blend_alpha": 0.5,
+        "rf": {
+          "max_depth": 12,
+          "min_samples_leaf": 2,
+          "n_estimators": 400,
+          "n_jobs": -1,
+          "random_state": 42
+        },
+        "xgb": {
+          "colsample_bytree": 0.8,
+          "learning_rate": 0.05,
+          "max_depth": 5,
+          "n_estimators": 500,
+          "random_state": 42,
+          "reg_lambda": 1.0,
+          "subsample": 0.9
+        }
+      }
+    }
+  },
+  "metrics": {
+    "test": {
+      "hybrid_ensemble": {
+        "mae": 3790.7473723274916,
+        "r2": 0.49084293359048736,
+        "rmse": 92784.22258369761
+      },
+      "lstm": {
+        "mae": 5823.420857070916,
+        "r2": 0.000767365579610102,
+        "rmse": 129981.50171238309
+      },
+      "rf": {
+        "mae": 2582.1753191285234,
+        "r2": 0.6859921876295101,
+        "rmse": 72864.91659084917
+      },
+      "tabular_ensemble": {
+        "mae": 2858.186277758625,
+        "r2": 0.7567164446969956,
+        "rmse": 64136.406386633666
+      },
+      "xgb": {
+        "mae": 5344.68005329684,
+        "r2": 0.12558995666983186,
+        "rmse": 121592.22736327915
+      }
+    },
+    "train": {
+      "hybrid_ensemble": {
+        "mae": 1591.1843596359522,
+        "r2": 0.5822269445885881,
+        "rmse": 108007.09714014649
+      },
+      "lstm": {
+        "mae": 2796.9682226687123,
+        "r2": 0.0005298368594771619,
+        "rmse": 167057.8922221355
+      },
+      "rf": {
+        "mae": 2018.930124044308,
+        "r2": 0.5769064296851126,
+        "rmse": 108692.67907065134
+      },
+      "tabular_ensemble": {
+        "mae": 1026.2791063714817,
+        "r2": 0.8942549745900253,
+        "rmse": 54339.05152496765
+      },
+      "xgb": {
+        "mae": 44.58651978430584,
+        "r2": 0.9999973485590787,
+        "rmse": 272.0965642833363
+      }
+    },
+    "val": {
+      "hybrid_ensemble": {
+        "mae": 393.45209055213775,
+        "r2": -1.4555379344213564,
+        "rmse": 7371.477613183874
+      },
+      "lstm": {
+        "mae": 240.61863229786582,
+        "r2": 0.05582862331758165,
+        "rmse": 4570.951805164759
+      },
+      "rf": {
+        "mae": 458.33103285363643,
+        "r2": -4.629161575019977,
+        "rmse": 11160.999388084392
+      },
+      "tabular_ensemble": {
+        "mae": 774.0807604636142,
+        "r2": -10.384629619761421,
+        "rmse": 15872.32984890101
+      },
+      "xgb": {
+        "mae": 1121.547292505687,
+        "r2": -22.482531241760466,
+        "rmse": 22795.739294535397
+      }
+    }
+  }
+}
